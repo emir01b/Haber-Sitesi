@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beyaz Sayfa - Haber Sitesi</title>
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Beyaz Sayfa</h1>
+            <nav>
+                <a href="#home">Ana Sayfa</a>
+                <a href="#world">Dünya</a>
+                <a href="#technology">Teknoloji</a>
+                <a href="spor.html">Spor</a>
+                <a href="#contact">İletişim</a>
+            </nav>
+            <div id="weather" class="weather-info"></div>
+        </div>
+    </header>
+       <br>
+    <main>
+        
+        <!-- Öne Çıkan Haberler Bölümü -->
+        <section class="featured-news">
+            
+            <h2>Günün Öne Çıkan Haberleri</h2>
+            <br>
+            <div class="slider">
+                <button id="prev" class="slider-button">&#10094;</button>
+                <div id="slider-container" class="slider-container"></div>
+                <button id="next" class="slider-button">&#10095;</button>
+            </div>
+        </section>
+
+        <!-- Haber Kartları Bölümü -->
+        <section class="news-grid">
+            <div class="news-item">
+                <img src="https://via.placeholder.com/400" alt="Haber Başlık">
+                <h3>Teknoloji Dünyasında Büyük Yenilikler</h3>
+                <p>Yapay zekanın gelişimi ve yeni teknoloji trendleri hakkında son haberler...</p>
+                <a href="#" class="read-more">Devamını Oku</a>
+            </div>
+            <div class="news-item">
+                <img src="https://via.placeholder.com/400" alt="Haber Başlık">
+                <h3>Ekonomi: Döviz Kuru Hareketliliği</h3>
+                <p>Son ekonomik gelişmeler ışığında döviz kuru tahminleri ve analizler...</p>
+                <a href="#" class="read-more">Devamını Oku</a>
+            </div>
+            <div class="news-item">
+                <img src="https://via.placeholder.com/400" alt="Haber Başlık">
+                <h3>Sağlık: Mevsimsel Hastalıklara Dikkat!</h3>
+                <p>Sağlık bakanlığından gelen uyarılar ve alınabilecek önlemler hakkında bilgi...</p>
+                <a href="#" class="read-more">Devamını Oku</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2023 Beyaz Sayfa | Tüm hakları saklıdır.</p>
+            <p><a href="#">Gizlilik Politikası</a> | <a href="#">Kullanım Şartları</a></p>
+        </div>
+    </footer>
+
+    <script src="weather.js"></script>
+</body>
+</html>
+
