@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekonomi Haberleri - Beyaz Sayfa</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'mongodb_app/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">BEYAZ SAYFA</div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Haber ara...">
+            <button class="search-button">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{% url 'index' %}">Ana Sayfa</a></li>
+            <li><a href="{% url 'spor' %}">Spor</a></li>
+            <li><a href="{% url 'teknoloji' %}">Teknoloji</a></li>
+            <li><a href="{% url 'ekonomi' %}" class="active">Ekonomi</a></li>
+            <li><a href="{% url 'dunya' %}">Dünya</a></li>
+            <li><a href="{% url 'havadurumu' %}">Hava Durumu</a></li>
+        </ul>
+    </header>
+
+    <main class="main-content">
+        <h1>Ekonomi Haberleri</h1>
+        <article class="news-card">
+            <h2>Ekonomi Haberi 1</h2>
+            <p>Haber özeti burada yer alacak. Daha fazla bilgi için tıklayın.</p>
+            <button class="read-more-btn">Devamını Oku</button>
+        </article>
+        <article class="news-card">
+            <h2>Ekonomi Haberi 2</h2>
+            <p>Haber özeti burada yer alacak. Daha fazla bilgi için tıklayın.</p>
+            <button class="read-more-btn">Devamını Oku</button>
+        </article>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2024 BEYAZ SAYFA. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <script src="{% static 'mongodb_app/js/script.js' %}"></script>
+</body>
+</html>
