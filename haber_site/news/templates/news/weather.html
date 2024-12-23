@@ -1,0 +1,274 @@
+{% extends 'news/base.html' %}
+
+{% block content %}
+<div class="weather-container">
+    <h1 class="weather-title">
+        <i class="fas fa-cloud-sun"></i> Türkiye Hava Durumu
+    </h1>
+    
+    <!-- Arama çubuğu -->
+    <div class="search-container">
+        <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="citySearch" placeholder="Şehir ara..." class="city-search">
+        </div>
+    </div>
+
+    <div class="row g-4" id="weatherCards">
+        {% for weather in weather_data %}
+        <div class="col-md-6 col-lg-3 weather-item" data-city="{{ weather.city|lower }}">
+            <div class="card weather-card" style="--animation-order: {{ forloop.counter }}">
+                <div class="card-body">
+                    <div class="weather-icon">
+                        <img src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="{{ weather.description }}">
+                    </div>
+                    <h3 class="city-name">{{ weather.city }}</h3>
+                    <div class="temperature">
+                        {{ weather.temperature }}°C
+                    </div>
+                    <div class="description">
+                        {{ weather.description }}
+                    </div>
+                    <div class="weather-details">
+                        <div class="detail">
+                            <i class="fas fa-thermometer-half"></i>
+                            Hissedilen: {{ weather.feels_like }}°C
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-tint"></i>
+                            Nem: {{ weather.humidity }}%
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-wind"></i>
+                            Rüzgar: {{ weather.wind_speed }} km/h
+                        </div>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Sonuç bulunamadı mesajı -->
+    <div id="noResults" class="no-results" style="display: none;">
+        <i class="fas fa-search"></i>
+        <p>Aranan şehir bulunamadı.</p>
+    </div>
+</div>
+
+<style>
+.weather-container {
+    padding: 2rem 0;
+    transition: all 0.3s ease;
+}
+
+.weather-title {
+    color: var(--text-color);
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.weather-card {
+    background: var(--header-color);
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: cardAppear 0.6s ease forwards;
+    animation-delay: calc(var(--animation-order) * 0.1s);
+}
+
+.weather-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.weather-icon {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.weather-icon img {
+    width: 100px;
+    height: 100px;
+}
+
+.city-name {
+    color: var(--text-color);
+    font-size: 1.4rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.temperature {
+    color: var(--text-color);
+    font-size: 2rem;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.description {
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.weather-details {
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.detail {
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.detail i {
+    width: 20px;
+    margin-right: 8px;
+}
+
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .col-md-6 {
+        padding: 0.5rem;
+    }
+    
+    .weather-card {
+        margin-bottom: 1rem;
+    }
+}
+
+.search-container {
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+    padding: 0 1rem;
+}
+
+.search-box {
+    background: var(--header-color);
+    border-radius: 12px;
+    padding: 0.8rem 1.2rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.search-box:hover, .search-box:focus-within {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.search-icon {
+    color: rgba(255, 255, 255, 0.8);
+    margin-right: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.city-search {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 1rem;
+    width: 100%;
+    padding: 0.3rem 0;
+    outline: none;
+}
+
+.city-search::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.no-results {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.no-results i {
+    font-size: 2rem;
+    opacity: 0.8;
+}
+
+/* Animasyon için */
+.weather-item {
+    transition: all 0.3s ease;
+}
+
+.weather-item.hidden {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .search-container {
+        padding: 0 0.5rem;
+    }
+    
+    .search-box {
+        padding: 0.6rem 1rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('citySearch');
+    const weatherItems = document.querySelectorAll('.weather-item');
+    const noResults = document.getElementById('noResults');
+
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        let hasResults = false;
+
+        weatherItems.forEach(item => {
+            const cityName = item.dataset.city;
+            if (cityName.includes(searchTerm)) {
+                item.classList.remove('hidden');
+                hasResults = true;
+            } else {
+                item.classList.add('hidden');
+            }
+        });
+
+        // Sonuç bulunamadı mesajını göster/gizle
+        noResults.style.display = hasResults ? 'none' : 'flex';
+    });
+
+    // Türkçe karakterleri düzeltme
+    searchInput.addEventListener('keyup', function() {
+        this.value = this.value
+            .replace('i', 'i')
+            .replace('ı', 'i')
+            .replace('ğ', 'g')
+            .replace('ü', 'u')
+            .replace('ş', 's')
+            .replace('ö', 'o')
+            .replace('ç', 'c');
+    });
+});
+</script>
+{% endblock %} 
