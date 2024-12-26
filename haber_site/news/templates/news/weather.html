@@ -2,14 +2,14 @@
 
 {% block content %}
 <div class="weather-container">
-    <h1 class="weather-title">
+    <h1 class="weather-title color1">
         <i class="fas fa-cloud-sun"></i> Türkiye Hava Durumu
     </h1>
     
     <!-- Arama çubuğu -->
     <div class="search-container">
         <div class="search-box">
-            <i class="fas fa-search search-icon"></i>
+            <i class="fas fa-search search-icon color4"></i>
             <input type="text" id="citySearch" placeholder="Şehir ara..." class="city-search">
         </div>
     </div>
@@ -17,30 +17,30 @@
     <div class="row g-4" id="weatherCards">
         {% for weather in weather_data %}
         <div class="col-md-6 col-lg-3 weather-item" data-city="{{ weather.city|lower }}">
-            <div class="card weather-card" style="--animation-order: {{ forloop.counter }}">
+            <div class="card weather-card" style="--animation-order: {{ forloop.counter }}; background-color: #c7d9e8;">
                 <div class="card-body">
                     <div class="weather-icon">
                         <img src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="{{ weather.description }}">
                     </div>
-                    <h3 class="city-name">{{ weather.city }}</h3>
-                    <div class="temperature">
+                    <h3 class="city-name color2">{{ weather.city }}</h3>
+                    <div class="temperature color3">
                         {{ weather.temperature }}°C
                     </div>
-                    <div class="description">
+                    <div class="description color4">
                         {{ weather.description }}
                     </div>
                     <div class="weather-details">
-                        <div class="detail">
+                        <div class="detail color5">
                             <i class="fas fa-thermometer-half"></i>
-                            Hissedilen: {{ weather.feels_like }}°C
+                            Hissedilen: <span class="color3">{{ weather.feels_like }}°C</span>
                         </div>
-                        <div class="detail">
+                        <div class="detail color5">
                             <i class="fas fa-tint"></i>
-                            Nem: {{ weather.humidity }}%
+                            Nem: <span class="color3">{{ weather.humidity }}%</span>
                         </div>
-                        <div class="detail">
+                        <div class="detail color5">
                             <i class="fas fa-wind"></i>
-                            Rüzgar: {{ weather.wind_speed }} km/h
+                            Rüzgar: <span class="color3">{{ weather.wind_speed }} km/h</span>
                         </div>
                     </div>
                 </div>
@@ -52,8 +52,8 @@
 
     <!-- Sonuç bulunamadı mesajı -->
     <div id="noResults" class="no-results" style="display: none;">
-        <i class="fas fa-search"></i>
-        <p>Aranan şehir bulunamadı.</p>
+        <i class="fas fa-search color4"></i>
+        <p class="color4">Aranan şehir bulunamadı.</p>
     </div>
 </div>
 
@@ -64,27 +64,24 @@
 }
 
 .weather-title {
-    color: var(--text-color);
-    font-size: 1.8rem;
+    color: #3f6188; /* color1 */
+    font-size: 2rem;
     margin-bottom: 2rem;
     text-align: center;
 }
 
 .weather-card {
-    background: var(--header-color);
-    border: none;
+    background: #c7d9e8; /* Arka plan rengi güncellendi */
+    border: 1px solid #c4d6e0; /* Hafif bir kenar rengi */
     border-radius: 12px;
     overflow: hidden;
     transition: all 0.3s ease;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: cardAppear 0.6s ease forwards;
-    animation-delay: calc(var(--animation-order) * 0.1s);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .weather-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .weather-icon {
@@ -93,40 +90,40 @@
 }
 
 .weather-icon img {
-    width: 100px;
-    height: 100px;
+    width: 80px; /* Daha küçük ikon boyutu */
+    height: 80px;
 }
 
 .city-name {
-    color: var(--text-color);
-    font-size: 1.4rem;
+    color: #2c3e50; /* Daha koyu bir renk */
+    font-size: 1.5rem;
     text-align: center;
     margin-bottom: 0.5rem;
 }
 
 .temperature {
-    color: var(--text-color);
-    font-size: 2rem;
+    color: #2980b9; /* Daha belirgin bir mavi */
+    font-size: 2.5rem;
     text-align: center;
     font-weight: bold;
     margin-bottom: 0.5rem;
 }
 
 .description {
-    color: var(--text-color);
+    color: #34495e; /* Koyu gri */
     text-align: center;
     margin-bottom: 1rem;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
 }
 
 .weather-details {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     padding: 1rem;
 }
 
 .detail {
-    color: var(--text-color);
+    color: #2c3e50; /* Koyu renk */
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
 }
@@ -134,17 +131,6 @@
 .detail i {
     width: 20px;
     margin-right: 8px;
-}
-
-@keyframes cardAppear {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 @media (max-width: 768px) {
@@ -164,7 +150,7 @@
 }
 
 .search-box {
-    background: var(--header-color);
+    background: #3f6188; /* color1 */
     border-radius: 12px;
     padding: 0.8rem 1.2rem;
     display: flex;
@@ -179,7 +165,7 @@
 }
 
 .search-icon {
-    color: rgba(255, 255, 255, 0.8);
+    color: #c4d6e0; /* color4 */
     margin-right: 0.8rem;
     font-size: 1.1rem;
 }
@@ -201,7 +187,7 @@
 .no-results {
     text-align: center;
     padding: 2rem;
-    color: var(--text-color);
+    color: #c4d6e0; /* color4 */
     font-size: 1.1rem;
     display: flex;
     flex-direction: column;

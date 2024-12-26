@@ -31,19 +31,28 @@
     {% for item in news %}
     <div class="col-md-6 col-lg-4">
         <div class="card h-100" style="--animation-order: {{ forloop.counter }}">
+            {% if item.image_url %}
+            <div class="card-image-container">
+                <div class="news-title-overlay">
+                    {{ item.title }}
+                </div>
+                <img src="{{ item.image_url }}" alt="{{ item.title }}" class="card-img">
+            </div>
+            {% endif %}
             <div class="card-body d-flex flex-column">
                 <div class="news-content">
-                    <div class="news-title">
-                        {{ item.title }}
-                    </div>
                     <div class="news-description">
-                        {{ item.description|safe|truncatewords:20 }}
+                        {{ item.description|striptags|truncatewords:20 }}
                     </div>
                 </div>
                 <div class="mt-auto">
-                    <div class="d-flex justify-content-end">
+                    <div class="news-meta">
+                        <div class="news-time">
+                            <i class="far fa-clock"></i>
+                            {{ item.published_date|date:"H:i" }}
+                        </div>
                         <a href="{{ item.link }}" class="btn btn-primary shine-effect" target="_blank">
-                            <span>Devamını Oku</span>
+                            Devamını Oku
                         </a>
                     </div>
                 </div>
@@ -323,6 +332,53 @@
 }
 
 /* Mevcut animasyonlar ve diğer stiller buraya... */
+
+.news-title-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    z-index: 2;
+    line-height: 1.4;
+}
+
+.news-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.news-time {
+    color: rgba(255,255,255,0.9);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.btn-primary {
+    margin-left: auto;
+    background-color: rgba(255,255,255,0.15);
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
 </style>
 
 <script>

@@ -32,12 +32,12 @@
             transform: translateX(-50%);
             z-index: 9999;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 0.3rem 1rem;
+            padding: 0.25rem 1rem;
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            min-height: 38px;
+            min-height: 35px;
         }
 
         .navbar-scrolled {
@@ -449,9 +449,9 @@
             animation: gradientFlow 15s ease infinite;
             background: linear-gradient(
                 135deg, 
-                var(--gradient-start), 
-                var(--gradient-end), 
-                var(--gradient-start)
+                #20B30F,  /* Koyu yeşil */
+                #2ECC71,  /* Orta yeşil */
+                #20B30F   /* Koyu yeşil */
             ) !important;
             background-size: 200% 200% !important;
         }
@@ -466,9 +466,9 @@
             animation: gradientFlow 15s ease infinite;
             background: linear-gradient(
                 135deg, 
-                var(--gradient-start), 
-                var(--gradient-end), 
-                var(--gradient-start)
+                #20B30F,  /* Koyu yeşil */
+                #2ECC71,  /* Orta yeşil */
+                #20B30F   /* Koyu yeşil */
             ) !important;
             background-size: 200% 200% !important;
         }
@@ -553,11 +553,14 @@
         }
 
         .sports-page .card-title {
-            color: #1a1a1a;
+            color: #ffffff;
             font-weight: 600;
             font-size: 1.2rem;
             margin-bottom: 1rem;
             line-height: 1.4;
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 8px;
         }
 
         .sports-page .card-title:hover {
@@ -719,7 +722,7 @@
                         <a class="nav-link" href="{% url 'news:home' %}">Ana Sayfa</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'news:category' 'son-dakika' %}">Son Dakika</a>
+                        <a class="nav-link" href="{% url 'news:category' 'sondakika' %}">Son Dakika</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'news:category' 'dunya' %}">Dünya</a>
@@ -815,30 +818,51 @@
 
         // Türkiye'nin tüm şehirleri
         const cities = [
-            "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya", "Ankara", "Antalya", "Artvin", "Aydın", "Balıkesir",
-            "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli",
-            "Diyarbakır", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari",
-            "Hatay", "Isparta", "Mersin", "İstanbul", "İzmir", "Kars", "Kastamonu", "Kayseri", "Kırklareli", "Kırşehir",
-            "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Kahramanmaraş", "Mardin", "Muğla", "Muş", "Nevşehir",
+            "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya", "Ankara", "Antalya", "Artvin", 
+            "Aydın", "Balıkesir", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale",
+            "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Edirne", "Elazığ", "Erzincan", "Erzurum", 
+            "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Isparta", "Mersin", 
+            "İstanbul", "İzmir", "Kars", "Kastamonu", "Kayseri", "Kırklareli", "Kırşehir", "Kocaeli",
+            "Konya", "Kütahya", "Malatya", "Manisa", "Kahramanmaraş", "Mardin", "Muğla", "Muş", "Nevşehir",
             "Niğde", "Ordu", "Rize", "Sakarya", "Samsun", "Siirt", "Sinop", "Sivas", "Tekirdağ", "Tokat",
-            "Trabzon", "Tunceli", "Şanlıurfa", "Uşak", "Van", "Yozgat", "Zonguldak", "Aksaray", "Bayburt", "Karaman",
-            "Kırıkkale", "Batman", "Şırnak", "Bartın", "Ardahan", "Iğdır", "Yalova", "Karabük", "Kilis", "Osmaniye", "Düzce"
+            "Trabzon", "Tunceli", "Şanlıurfa", "Uşak", "Van", "Yozgat", "Zonguldak", "Aksaray", "Bayburt",
+            "Karaman", "Kırıkkale", "Batman", "Şırnak", "Bartın", "Ardahan", "Iğdır", "Yalova", "Karabük",
+            "Kilis", "Osmaniye", "Düzce"
         ];
 
         // Şehirleri alfabetik sırala ve select'e ekle
-        cities.sort();
-        cities.forEach(city => {
+        cities.sort().forEach(city => {
             const option = document.createElement('option');
             option.value = city;
             option.textContent = city;
-            if (city === 'Elazığ') { // Elazığ'ı seçili yap
+            if (city === 'Sivas') {
                 option.selected = true;
             }
             citySelect.appendChild(option);
         });
 
-        // Varsayılan şehir (Elazığ)
-        getWeather('Elazığ');
+        // Hava durumu verilerini al
+        async function getWeather(city) {
+            try {
+                const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},TR&appid=${api_key}&units=metric&lang=tr`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                const temp = Math.round(data.main.temp);
+                const desc = data.weather[0].description
+                    .split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                    .join(' ');
+                
+                weatherInfo.textContent = `${desc} ${temp}°C`;
+            } catch (err) {
+                console.error('Hava durumu alınamadı:', err);
+                weatherInfo.textContent = 'Hava durumu alınamadı';
+            }
+        }
+
+        // Sayfa yüklendiğinde Elazığ'ın hava durumunu göster
+        getWeather('Sivas');
 
         // Şehir değiştiğinde hava durumunu güncelle
         citySelect.addEventListener('change', (e) => {
@@ -846,58 +870,6 @@
                 getWeather(e.target.value);
             }
         });
-
-        // Hava durumu bilgisini al
-        function getWeather(city) {
-            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},TR&appid=${api_key}&units=metric&lang=tr`;
-            
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    const temp = Math.round(data.main.temp);
-                    const desc = data.weather[0].description
-                        .split(' ')
-                        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                        .join(' ');
-                    const icon = data.weather[0].icon;
-                    
-                    // Hava durumu ikonunu güncelle
-                    const weatherIcon = document.querySelector('.current-weather i');
-                    weatherIcon.className = getWeatherIcon(icon);
-                    
-                    // Bilgiyi güncelle (şehir ismi olmadan)
-                    weatherInfo.textContent = `${desc} ${temp}°C`;
-                })
-                .catch(err => {
-                    console.error('Hava durumu alınamadı:', err);
-                    weatherInfo.textContent = 'Hava durumu alınamadı';
-                });
-        }
-
-        // Hava durumu ikonlarını Font Awesome ikonlarına çevir
-        function getWeatherIcon(code) {
-            const iconMap = {
-                '01d': 'fas fa-sun',
-                '01n': 'fas fa-moon',
-                '02d': 'fas fa-cloud-sun',
-                '02n': 'fas fa-cloud-moon',
-                '03d': 'fas fa-cloud',
-                '03n': 'fas fa-cloud',
-                '04d': 'fas fa-cloud',
-                '04n': 'fas fa-cloud',
-                '09d': 'fas fa-cloud-rain',
-                '09n': 'fas fa-cloud-rain',
-                '10d': 'fas fa-cloud-sun-rain',
-                '10n': 'fas fa-cloud-moon-rain',
-                '11d': 'fas fa-bolt',
-                '11n': 'fas fa-bolt',
-                '13d': 'fas fa-snowflake',
-                '13n': 'fas fa-snowflake',
-                '50d': 'fas fa-smog',
-                '50n': 'fas fa-smog'
-            };
-            return iconMap[code] || 'fas fa-cloud';
-        }
     });
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -911,7 +883,7 @@
             document.documentElement.style.setProperty('--header-color', '#20B30F');
             document.documentElement.style.setProperty('--accent-color', '#2ECC71');
             
-            // Header ve footer için animasyon class'ı ekle
+            // Header ve footer için animasyon class' ekle
             document.querySelector('.navbar').classList.add('sports-nav');
             document.querySelector('footer').classList.add('sports-footer');
         } else {
@@ -925,6 +897,101 @@
         
         if (isSportsPage) {
             document.body.classList.add('sports-page');
+        }
+    });
+
+    // Hava durumu sayfası için JavaScript optimizasyonu
+    document.addEventListener('DOMContentLoaded', function() {
+        const weatherData = {};  // Önbellek için
+        
+        async function getWeatherData(city) {
+            if (weatherData[city]) {
+                return weatherData[city];  // Önbellekten al
+            }
+
+            try {
+                const response = await fetch(`/api/weather/${city}/`);
+                const data = await response.json();
+                weatherData[city] = data;  // Önbelleğe kaydet
+                return data;
+            } catch (error) {
+                console.error('Hava durumu verisi alınamadı:', error);
+            }
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const weatherContainer = document.getElementById('weatherContent');
+        const loadingIndicator = document.getElementById('loading');
+        let currentPage = 1;
+        const cardsPerLoad = 6; // Her seferde yüklenecek kart sayısı
+
+        // Haber kartı oluşturma fonksiyonu
+        function createWeatherCard(data) {
+            return `
+                <div class="col-lg-4 col-md-6 mb-4 weather-card" style="opacity: 0; transform: translateY(20px);">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">${data.city}</h5>
+                            <p class="card-text">
+                                <i class="fas ${data.icon}"></i>
+                                ${data.temperature}°C
+                                <br>
+                                ${data.description}
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">${data.humidity}% Nem</small>
+                                <small class="text-muted">${data.windSpeed} km/s Rüzgar</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Kartları aşamalı olarak yükle
+        function loadWeatherCards(page) {
+            const start = (page - 1) * cardsPerLoad;
+            const end = start + cardsPerLoad;
+            const cards = document.querySelectorAll('.weather-card');
+
+            // Her kartı sırayla göster
+            cards.forEach((card, index) => {
+                if (index >= start && index < end) {
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.5s ease';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, (index - start) * 200); // Her kart 200ms arayla yüklenecek
+                }
+            });
+
+            if (end >= cards.length) {
+                // Tüm kartlar yüklendi, loading göstergesini kaldır
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'none';
+                }
+            } else {
+                currentPage++;
+                // Scroll eventi ile daha fazla kart yükle
+                checkScroll();
+            }
+        }
+
+        // Scroll kontrolü
+        function checkScroll() {
+            const scrollPosition = window.innerHeight + window.scrollY;
+            const pageHeight = document.documentElement.scrollHeight;
+
+            if (scrollPosition >= pageHeight - 1000) { // 1000px kala yeni kartları yüklemeye başla
+                loadWeatherCards(currentPage);
+            }
+        }
+
+        // Sayfa yüklendiğinde ilk kartları göster
+        if (weatherContainer) {
+            loadWeatherCards(currentPage);
+            window.addEventListener('scroll', checkScroll);
         }
     });
     </script>

@@ -213,3 +213,23 @@ body {
         opacity: 1;
     }
 }
+
+/* Haber kartı alt bilgi alanı için stil */
+.news-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.news-time {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.news-time i {
+    font-size: 0.9rem;
+}

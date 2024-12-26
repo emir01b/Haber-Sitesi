@@ -12,7 +12,7 @@ def home(request):
     
     if collection is not None:
         try:
-            news = list(collection.find().sort('published_date', -1).limit(10))
+            news = list(collection.find().sort('published_date', -1).limit(24))
             
             seen_links = set()
             unique_news = []
