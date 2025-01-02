@@ -835,7 +835,7 @@
             const option = document.createElement('option');
             option.value = city;
             option.textContent = city;
-            if (city === 'Sivas') {
+            if (city === 'Elazığ') {
                 option.selected = true;
             }
             citySelect.appendChild(option);
@@ -862,7 +862,7 @@
         }
 
         // Sayfa yüklendiğinde Elazığ'ın hava durumunu göster
-        getWeather('Sivas');
+        getWeather('Elazığ');
 
         // Şehir değiştiğinde hava durumunu güncelle
         citySelect.addEventListener('change', (e) => {
