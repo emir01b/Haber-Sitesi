@@ -1,4 +1,5 @@
 {% extends 'news/base.html' %}
+{% load custom_filters %}
 
 {% block content %}
 <div class="category-container">
@@ -38,7 +39,7 @@
                         <div class="news-meta">
                             <div class="news-time">
                                 <i class="far fa-clock"></i>
-                                {{ item.published_date|date:"H:i" }}
+                                {{ item.published_date|date:"H:i"|add_hours:"3" }}
                             </div>
                             <a href="{{ item.link }}" class="btn btn-primary shine-effect" target="_blank">
                                 Devamını Oku

@@ -16,85 +16,110 @@ class Command(BaseCommand):
 
     def fetch_news(self):
         RSS_FEEDS = {
-            'sondakika': 'https://www.trthaber.com/sondakika_articles.rss',
-            'dunya': 'https://www.trthaber.com/dunya_articles.rss',
-            'ekonomi': 'https://www.trthaber.com/ekonomi_articles.rss',
-            'spor': 'https://www.trthaber.com/spor_articles.rss',
-            'bilim': 'https://www.trthaber.com/bilim_teknoloji_articles.rss'
+            'sondakika': [
+                'https://www.trthaber.com/sondakika_articles.rss',
+                'https://www.haberturk.com/rss/manset.xml'
+            ],
+            'dunya': [
+                'https://www.trthaber.com/dunya_articles.rss',
+                'https://www.haberturk.com/rss/kategori/dunya.xml'
+            ],
+            'ekonomi': [
+                'https://www.trthaber.com/ekonomi_articles.rss',
+                'https://www.haberturk.com/rss/ekonomi.xml'
+            ],
+            'spor': [
+                'https://www.trthaber.com/spor_articles.rss',
+                'https://www.haberturk.com/rss/spor.xml'
+            ],
+            'bilim': [
+                'https://www.trthaber.com/bilim_teknoloji_articles.rss',
+                'https://www.haberturk.com/rss/kategori/teknoloji.xml'
+            ]
         }
 
         current_time = timezone.localtime(timezone.now())
         self.stdout.write(f"Haber çekme görevi başladı - {current_time.strftime('%d-%m-%Y %H:%M:%S')}")
         turkey_tz = pytz.timezone('Europe/Istanbul')
         
-        for category, url in RSS_FEEDS.items():
+        for category, urls in RSS_FEEDS.items():
             try:
-                self.stdout.write(f"{category} kategorisi için RSS feed'i okunuyor: {url}")
-                
-                # RSS feed'ini kontrol et
-                response = requests.get(url, timeout=10)
-                if response.status_code != 200:
-                    self.stdout.write(self.style.ERROR(f"{category} RSS feed'i erişilemez: {response.status_code}"))
-                    continue
-
-                feed = feedparser.parse(url)
-                
-                if not feed.entries:
-                    self.stdout.write(self.style.WARNING(f"{category} için haber bulunamadı!"))
-                    continue
-                    
-                self.stdout.write(f"{category} için {len(feed.entries)} haber bulundu")
-                
                 collection, client = get_collection_handle(category)
                 
                 if collection is not None:
                     news_count = 0
-                    for entry in feed.entries:
+                    
+                    for url in urls:
                         try:
-                            if hasattr(entry, 'published_parsed') and entry.published_parsed:
-                                dt = datetime.fromtimestamp(mktime(entry.published_parsed))
-                                dt = pytz.UTC.localize(dt)
-                                published_date = dt.astimezone(turkey_tz)
-                            else:
-                                published_date = datetime.now(turkey_tz)
-
-                            # Haber içeriğini kontrol et
-                            if not entry.title or not entry.link:
-                                self.stdout.write(self.style.WARNING(f"Eksik veri: {entry}"))
+                            self.stdout.write(f"{category} kategorisi için RSS feed'i okunuyor: {url}")
+                            
+                            # RSS feed'ini kontrol et
+                            response = requests.get(url, timeout=10)
+                            if response.status_code != 200:
+                                self.stdout.write(self.style.ERROR(f"{url} RSS feed'i erişilemez: {response.status_code}"))
                                 continue
 
-                            news_item = {
-                                'title': entry.title,
-                                'link': entry.link,
-                                'description': getattr(entry, 'description', ''),
-                                'published_date': published_date,
-                                'image_url': entry.get('media_content', [{}])[0].get('url', '') 
-                                           if 'media_content' in entry else '',
-                                'category': category
-                            }
+                            feed = feedparser.parse(url)
+                            source = 'TRT Haber' if 'trthaber' in url else 'Habertürk'
                             
-                            # Son dakika kategorisi için özel kontrol
-                            if category == 'sondakika':
-                                news_item['priority'] = True
-                                # Son 24 saat kontrolü
-                                if (timezone.now() - published_date).total_seconds() > 86400:
-                                    continue
+                            if not feed.entries:
+                                self.stdout.write(self.style.WARNING(f"{url} için haber bulunamadı!"))
+                                continue
+                                
+                            self.stdout.write(f"{url} için {len(feed.entries)} haber bulundu")
                             
-                            result = collection.update_one(
-                                {'link': entry.link},
-                                {'$set': news_item},
-                                upsert=True
-                            )
-                            
-                            if result.modified_count > 0 or result.upserted_id:
-                                news_count += 1
-                                self.stdout.write(
-                                    self.style.SUCCESS(f"Yeni haber eklendi ({category}): {news_item['title']}")
-                                )
-                            
+                            for entry in feed.entries:
+                                try:
+                                    if hasattr(entry, 'published_parsed') and entry.published_parsed:
+                                        dt = datetime.fromtimestamp(mktime(entry.published_parsed))
+                                        dt = pytz.UTC.localize(dt)
+                                        published_date = dt.astimezone(turkey_tz)
+                                    else:
+                                        published_date = datetime.now(turkey_tz)
+
+                                    # Haber içeriğini kontrol et
+                                    if not entry.title or not entry.link:
+                                        self.stdout.write(self.style.WARNING(f"Eksik veri: {entry}"))
+                                        continue
+
+                                    news_item = {
+                                        'title': entry.title,
+                                        'link': entry.link,
+                                        'description': getattr(entry, 'description', ''),
+                                        'published_date': published_date,
+                                        'image_url': entry.get('media_content', [{}])[0].get('url', '') 
+                                                   if 'media_content' in entry else '',
+                                        'category': category,
+                                        'source': source
+                                    }
+                                    
+                                    # Son dakika kategorisi için özel kontrol
+                                    if category == 'sondakika':
+                                        news_item['priority'] = True
+                                        # Son 24 saat kontrolü
+                                        if (timezone.now() - published_date).total_seconds() > 86400:
+                                            continue
+                                    
+                                    result = collection.update_one(
+                                        {'link': entry.link},
+                                        {'$set': news_item},
+                                        upsert=True
+                                    )
+                                    
+                                    if result.modified_count > 0 or result.upserted_id:
+                                        news_count += 1
+                                        self.stdout.write(
+                                            self.style.SUCCESS(f"Yeni haber eklendi ({category} - {source}): {news_item['title']}")
+                                        )
+                                    
+                                except Exception as e:
+                                    self.stdout.write(
+                                        self.style.ERROR(f"Haber işlenirken hata: {str(e)}")
+                                    )
+                        
                         except Exception as e:
                             self.stdout.write(
-                                self.style.ERROR(f"Haber işlenirken hata: {str(e)}")
+                                self.style.ERROR(f"{url} için hata oluştu: {str(e)}")
                             )
                     
                     self.stdout.write(

@@ -109,12 +109,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-MONGODB_URI = config('MONGODB_URI', default='mongodb+srv://haber_web_database:<db_password>@haberweb.dszph.mongodb.net/?retryWrites=true&w=majority&appName=HaberWeb')
-
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'news' / 'static',
-]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
