@@ -1,7 +1,7 @@
 # This file is distributed under the same license as the Django package.
 #
 # Translators:
-# Ali Nikneshan <ali@nikneshan.com>, 2012-2013
+# Ali Nikneshan <ali@nikneshan.com>, 2012-2013,2020
 # Alireza Savand <alireza.savand@gmail.com>, 2013
 # Ali Vakilzade <ali.vakilzade@gmail.com>, 2015
 # Jannis Leidel <jannis@leidel.info>, 2011
@@ -11,10 +11,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-19 16:49+0100\n"
-"PO-Revision-Date: 2017-09-23 18:54+0000\n"
-"Last-Translator: Jannis Leidel <jannis@leidel.info>\n"
-"Language-Team: Persian (http://www.transifex.com/django/django/language/"
+"POT-Creation-Date: 2023-09-18 11:41-0300\n"
+"PO-Revision-Date: 2023-12-04 18:45+0000\n"
+"Last-Translator: Ali Nikneshan <ali@nikneshan.com>, 2012-2013,2020\n"
+"Language-Team: Persian (http://app.transifex.com/django/django/language/"
 "fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgid "The base GIS field."
 msgstr "پایه‌ی سیستم اطلاعات جغرافیایی میدانی."
 
 msgid ""
-"The base Geometry field -- maps to the OpenGIS Specification Geometry type."
+"The base Geometry field — maps to the OpenGIS Specification Geometry type."
 msgstr "پایه‌ی فیلد هندسی --نوع خاص هندسه‌ی نقشه‌ها‌ی نوع OpenGIS"
 
 msgid "Point"
@@ -76,9 +76,6 @@ msgstr "مشکلی در هنگام انتقال مختصات هندسی از ف�
 msgid "Delete all Features"
 msgstr "حذف همه‌ی اشیاء"
 
-msgid "WKT debugging window:"
-msgstr "پنجره‌ی اشکال زدایی «متن قابل درک»"
-
 msgid "Debugging window (serialized value)"
 msgstr "پنجره‌ی اشکال زدایی (ارزش متوالی)"
 
@@ -86,5 +83,5 @@ msgid "No feeds are registered."
 msgstr "هیچ فیدی ثبت شده است."
 
 #, python-format
-msgid "Slug %r isn't registered."
+msgid "Slug %r isn’t registered."
 msgstr "Slug %r ثبت نشده"

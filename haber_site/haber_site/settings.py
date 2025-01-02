@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -76,7 +77,15 @@ WSGI_APPLICATION = 'haber_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-
+DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'haber_db',
+        'CLIENT': {
+            'host': config('MONGODB_URI')
+        }
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -109,12 +118,12 @@ USE_I18N = True
 USE_TZ = True
 
 
-MONGODB_URI = config('MONGODB_URI', default='mongodb+srv://haber_web_database:<db_password>@haberweb.dszph.mongodb.net/?retryWrites=true&w=majority&appName=HaberWeb')
-
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'news' / 'static',
+    os.path.join(BASE_DIR, 'news', 'static'),
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -142,3 +151,20 @@ LOGGING = {
         },
     },
 }
+
+# Redis cache ayarları
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',  # Redis sunucu adresi
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+# OpenWeatherMap API key
+try:
+    OPENWEATHER_API_KEY = config('OPENWEATHER_API_KEY')
+except:
+    OPENWEATHER_API_KEY = 'b3c53f46a07d0384f764935799a0b710'  # Doğrudan API key'i kullanıyoruz

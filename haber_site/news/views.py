@@ -5,6 +5,9 @@ import pytz
 from .models import News  # Haber modelinizi buraya ekleyin
 import requests
 from django.db.models import Q
+from django.core.cache import cache
+from django.conf import settings
+import json
 
 def home(request):
     collection, client = get_collection_handle('sondakika')
@@ -78,43 +81,69 @@ def search(request):
     }
     return render(request, 'news/search_results.html', context)
 
-def weather(request):
-    api_key = "b3c53f46a07d0384f764935799a0b710"
-    turkey_cities = [
-        "Adana", "Adıyaman", "Afyonkarahisar", "Agrı", "Aksaray", "Amasya", "Ankara", "Antalya", "Ardahan", "Artvin",
-        "Aydin", "Balıkesir", "Bartın", "Batman", "Bayburt", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur",
-        "Bursa", "Canakkale", "Cankiri", "Corum", "Denizli", "Diyarbakir", "Duzce", "Edirne", "Elazig", "Erzincan",
-        "Erzurum", "Eskisehir", "Gaziantep", "Giresun", "Gumushane", "Hakkari", "Hatay", "Igdir", "Isparta", "Istanbul",
-        "Izmir", "Kahramanmaras", "Karabuk", "Karaman", "Kars", "Kastamonu", "Kayseri", "Kirikkale", "Kirklareli",
-        "Kirsehir", "Kilis", "Kocaeli", "Konya", "Kutahya", "Malatya", "Manisa", "Mardin", "Mersin", "Mugla", "Mus",
-        "Nevsehir", "Nigde", "Ordu", "Osmaniye", "Rize", "Sakarya", "Samsun", "Siirt", "Sinop", "Sivas", "Sanliurfa",
-        "Sirnak", "Tekirdag", "Tokat", "Trabzon", "Tunceli", "Usak", "Van", "Yalova", "Yozgat", "Zonguldak"
+def fetch_weather_data():
+    api_key = settings.OPENWEATHER_API_KEY
+    cities = [
+        'Adana', 'Adıyaman', 'Afyonkarahisar', 'Ağrı', 'Amasya', 'Ankara', 'Antalya', 'Artvin', 
+        'Aydın', 'Balıkesir', 'Bilecik', 'Bingöl', 'Bitlis', 'Bolu', 'Burdur', 'Bursa', 'Çanakkale',
+        'Çankırı', 'Çorum', 'Denizli', 'Diyarbakır', 'Edirne', 'Elazığ', 'Erzincan', 'Erzurum',
+        'Eskişehir', 'Gaziantep', 'Giresun', 'Gümüşhane', 'Hakkari', 'Hatay', 'Isparta', 'Mersin',
+        'Istanbul', 'Izmir', 'Kars', 'Kastamonu', 'Kayseri', 'Kırklareli', 'Kırşehir', 'Kocaeli',
+        'Konya', 'Kütahya', 'Malatya', 'Manisa', 'Kahramanmaraş', 'Mardin', 'Muğla', 'Muş', 'Nevşehir',
+        'Niğde', 'Ordu', 'Rize', 'Sakarya', 'Samsun', 'Siirt', 'Sinop', 'Sivas', 'Tekirdağ', 'Tokat',
+        'Trabzon', 'Tunceli', 'Şanlıurfa', 'Uşak', 'Van', 'Yozgat', 'Zonguldak', 'Aksaray', 'Bayburt',
+        'Karaman', 'Kırıkkale', 'Batman', 'Şırnak', 'Bartın', 'Ardahan', 'Iğdır', 'Yalova', 'Karabük',
+        'Kilis', 'Osmaniye', 'Düzce'
     ]
     
     weather_data = []
     
-    for city in turkey_cities:
+    for city in cities:
         try:
-            url = f"https://api.openweathermap.org/data/2.5/weather?q={city},TR&appid={api_key}&units=metric&lang=tr"
+            # Cache anahtarı oluştur
+            cache_key = f'weather_{city.lower()}'
+            # Önce cache'den veriyi kontrol et
+            cached_data = cache.get(cache_key)
+            
+            if cached_data:
+                weather_data.append(cached_data)
+                continue
+                
+            url = f'http://api.openweathermap.org/data/2.5/weather?q={city},TR&appid={api_key}&units=metric&lang=tr'
             response = requests.get(url)
+            data = response.json()
             
             if response.status_code == 200:
-                data = response.json()
                 weather_info = {
                     'city': city,
                     'temperature': round(data['main']['temp']),
-                    'description': data['weather'][0]['description'].capitalize(),
+                    'description': data['weather'][0]['description'],
                     'icon': data['weather'][0]['icon'],
                     'humidity': data['main']['humidity'],
-                    'wind_speed': round(data['wind']['speed'] * 3.6, 1),  # m/s'yi km/h'ye çeviriyoruz
+                    'wind_speed': round(data['wind']['speed']),
                     'feels_like': round(data['main']['feels_like'])
                 }
+                # Her şehir için ayrı cache
+                cache.set(cache_key, weather_info, 30 * 60)  # 30 dakika cache
                 weather_data.append(weather_info)
+                
         except Exception as e:
-            print(f"Error fetching weather for {city}: {e}")
+            print(f"Error fetching weather for {city}: {str(e)}")
             continue
     
-    # Şehirleri alfabetik olarak sırala
-    weather_data = sorted(weather_data, key=lambda x: x['city'])
+    return weather_data
+
+def weather_view(request):
+    # Cache'den veriyi kontrol et
+    cache_key = 'weather_data'
+    weather_data = cache.get(cache_key)
+    
+    if weather_data is None:
+        # Cache'de veri yoksa API'den çek
+        weather_data = fetch_weather_data()
+        
+        # Veriyi 30 dakika boyunca cache'de tut
+        if weather_data:  # Eğer veri başarıyla çekildiyse
+            cache.set(cache_key, weather_data, 30 * 60)
     
     return render(request, 'news/weather.html', {'weather_data': weather_data})

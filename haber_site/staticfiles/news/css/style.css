@@ -1,0 +1,235 @@
+/* Modern ve Minimal Tasarım */
+:root {
+    --primary-color: #2c3e50;
+    --accent-color: #3498db;
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #2c3e50;
+    --text-muted: #7f8c8d;
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* Modern Navbar */
+.navbar {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+    padding: 0.8rem 0;
+    transform: translateY(0);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.navbar.scrolled {
+    transform: translateY(-100%);
+}
+
+.navbar-nav .nav-link {
+    position: relative;
+    padding: 0.5rem 1rem;
+}
+
+.navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: 80%;
+}
+
+/* Kart Stilleri */
+.card {
+    border: none;
+    border-radius: 12px;
+    background: var(--card-bg);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    margin-bottom: 1rem;
+}
+
+/* Görsel Stilleri - Sadece bu kısmı değiştiriyoruz */
+.card img {
+    aspect-ratio: 1/1;  /* Kare format */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* Kart İçeriği */
+.card-body {
+    padding: 1rem;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+}
+
+.card-text {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Responsive Ayarlar */
+@media (max-width: 768px) {
+    .card-title {
+        font-size: 1rem;
+    }
+}
+
+/* Buton Stilleri */
+.btn-primary {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    background-color: var(--accent-color);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
+}
+
+/* Animasyonlar */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: slideUp 0.6s ease forwards;
+}
+
+/* Minimal Kategori Başlıkları */
+.category-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    position: relative;
+    display: inline-block;
+    color: var(--primary-color);
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 0.5rem;
+}
+
+.category-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 40%;
+    height: 3px;
+    background-color: var(--accent-color);
+    border-radius: 2px;
+}
+
+.category-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-color), transparent);
+    transform: translateX(-100%);
+    animation: slideIn 0.8s ease forwards;
+}
+
+@keyframes slideIn {
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* Tarih ve İkon Stilleri */
+.text-muted {
+    font-size: 0.85rem;
+    color: var(--text-muted) !important;
+}
+
+.fas, .far {
+    margin-right: 0.4rem;
+}
+
+/* Grid Düzeni */
+.row {
+    margin: -0.5rem;
+}
+
+.col-md-6, .col-lg-4 {
+    padding: 0.5rem;
+}
+
+/* Dark Mode Desteği */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1a1a1a;
+        --card-bg: #242424;
+        --text-color: #e1e1e1;
+        --text-muted: #a0a0a0;
+    }
+    
+    .navbar {
+        background-color: rgba(36, 36, 36, 0.95) !important;
+    }
+    
+    .card {
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+}
+
+/* Sayfa Geçiş Animasyonu */
+.content-wrapper {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Haber kartı alt bilgi alanı için stil */
+.news-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.news-time {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.news-time i {
+    font-size: 0.9rem;
+}

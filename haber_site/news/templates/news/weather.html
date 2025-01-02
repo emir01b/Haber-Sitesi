@@ -1,4 +1,9 @@
 {% extends 'news/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/weather.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="weather-container">
@@ -14,7 +19,14 @@
         </div>
     </div>
 
-    <div class="row g-4" id="weatherCards">
+    <!-- Yükleme göstergesi -->
+    <div id="loading" class="text-center" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Yükleniyor...</span>
+        </div>
+    </div>
+
+    <div class="row g-4" id="weatherCards" style="display: none;">
         {% for weather in weather_data %}
         <div class="col-md-6 col-lg-3 weather-item" data-city="{{ weather.city|lower }}">
             <div class="card weather-card" style="--animation-order: {{ forloop.counter }}; background-color: #c7d9e8;">
@@ -56,205 +68,8 @@
         <p class="color4">Aranan şehir bulunamadı.</p>
     </div>
 </div>
+{% endblock %}
 
-<style>
-.weather-container {
-    padding: 2rem 0;
-    transition: all 0.3s ease;
-}
-
-.weather-title {
-    color: #3f6188; /* color1 */
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    text-align: center;
-}
-
-.weather-card {
-    background: #c7d9e8; /* Arka plan rengi güncellendi */
-    border: 1px solid #c4d6e0; /* Hafif bir kenar rengi */
-    border-radius: 12px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.weather-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-}
-
-.weather-icon {
-    text-align: center;
-    margin-bottom: 1rem;
-}
-
-.weather-icon img {
-    width: 80px; /* Daha küçük ikon boyutu */
-    height: 80px;
-}
-
-.city-name {
-    color: #2c3e50; /* Daha koyu bir renk */
-    font-size: 1.5rem;
-    text-align: center;
-    margin-bottom: 0.5rem;
-}
-
-.temperature {
-    color: #2980b9; /* Daha belirgin bir mavi */
-    font-size: 2.5rem;
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-
-.description {
-    color: #34495e; /* Koyu gri */
-    text-align: center;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-}
-
-.weather-details {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 1rem;
-}
-
-.detail {
-    color: #2c3e50; /* Koyu renk */
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.detail i {
-    width: 20px;
-    margin-right: 8px;
-}
-
-@media (max-width: 768px) {
-    .col-md-6 {
-        padding: 0.5rem;
-    }
-    
-    .weather-card {
-        margin-bottom: 1rem;
-    }
-}
-
-.search-container {
-    max-width: 600px;
-    margin: 0 auto 2rem auto;
-    padding: 0 1rem;
-}
-
-.search-box {
-    background: #3f6188; /* color1 */
-    border-radius: 12px;
-    padding: 0.8rem 1.2rem;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-.search-box:hover, .search-box:focus-within {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
-
-.search-icon {
-    color: #c4d6e0; /* color4 */
-    margin-right: 0.8rem;
-    font-size: 1.1rem;
-}
-
-.city-search {
-    background: transparent;
-    border: none;
-    color: #ffffff;
-    font-size: 1rem;
-    width: 100%;
-    padding: 0.3rem 0;
-    outline: none;
-}
-
-.city-search::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.no-results {
-    text-align: center;
-    padding: 2rem;
-    color: #c4d6e0; /* color4 */
-    font-size: 1.1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-}
-
-.no-results i {
-    font-size: 2rem;
-    opacity: 0.8;
-}
-
-/* Animasyon için */
-.weather-item {
-    transition: all 0.3s ease;
-}
-
-.weather-item.hidden {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .search-container {
-        padding: 0 0.5rem;
-    }
-    
-    .search-box {
-        padding: 0.6rem 1rem;
-    }
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('citySearch');
-    const weatherItems = document.querySelectorAll('.weather-item');
-    const noResults = document.getElementById('noResults');
-
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase().trim();
-        let hasResults = false;
-
-        weatherItems.forEach(item => {
-            const cityName = item.dataset.city;
-            if (cityName.includes(searchTerm)) {
-                item.classList.remove('hidden');
-                hasResults = true;
-            } else {
-                item.classList.add('hidden');
-            }
-        });
-
-        // Sonuç bulunamadı mesajını göster/gizle
-        noResults.style.display = hasResults ? 'none' : 'flex';
-    });
-
-    // Türkçe karakterleri düzeltme
-    searchInput.addEventListener('keyup', function() {
-        this.value = this.value
-            .replace('i', 'i')
-            .replace('ı', 'i')
-            .replace('ğ', 'g')
-            .replace('ü', 'u')
-            .replace('ş', 's')
-            .replace('ö', 'o')
-            .replace('ç', 'c');
-    });
-});
-</script>
+{% block extra_js %}
+<script src="{% static 'js/weather.js' %}"></script>
 {% endblock %} 
